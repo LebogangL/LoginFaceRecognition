@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.loginfacerecognation.data.AppDatabase
 import com.example.loginfacerecognation.data.FaceEntity
+import com.example.loginfacerecognation.model.LoginResponse
+import com.example.loginfacerecognation.repository.FaceAuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,6 +16,7 @@ import kotlin.math.sqrt
 
 class FaceViewModel(application: Application) : AndroidViewModel(application) {
     private val faceDao = AppDatabase.getDatabase(application).faceDao()
+    private val authRepository = FaceAuthRepository()
 
     suspend fun registerFace(name: String, embedding: FloatArray): Boolean {
         return withContext(Dispatchers.IO) {
@@ -37,20 +40,51 @@ class FaceViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     suspend fun verifyFace(currentEmbedding: FloatArray): Boolean {
+        return findFaceMatch(currentEmbedding) != null
+    }
+
+    suspend fun loginWithBackend(
+        userId: String,
+        currentEmbedding: FloatArray,
+        deviceId: String
+    ): LoginResponse? {
+        val match = findFaceMatch(currentEmbedding, userId) ?: return LoginResponse(
+            success = false,
+            token = null,
+            userName = null,
+            message = "Face not registered for this user on this device"
+        )
+
+        return authRepository.login(
+            userId = match.userId,
+            faceConfidence = match.confidence,
+            deviceId = deviceId
+        )
+    }
+
+    private suspend fun findFaceMatch(currentEmbedding: FloatArray, expectedUserId: String? = null): FaceMatch? {
         return withContext(Dispatchers.IO) {
             val registeredFaces = faceDao.getAllFaces()
             Log.d("FaceViewModel", "Checking login against ${registeredFaces.size} users")
-            
+
             for (face in registeredFaces) {
+                if (!expectedUserId.isNullOrBlank()
+                    && !face.name.equals(expectedUserId.trim(), ignoreCase = true)) {
+                    continue
+                }
+
                 val registeredEmbedding = face.embedding.split(",").map { it.toFloat() }.toFloatArray()
                 val distance = calculateDistance(currentEmbedding, registeredEmbedding)
                 Log.d("FaceViewModel", "Distance to user ${face.id}: $distance")
 
                 if (distance < 0.7) {
-                    return@withContext true
+                    return@withContext FaceMatch(
+                        userId = face.name,
+                        confidence = (1.0f - distance).coerceIn(0.0f, 1.0f)
+                    )
                 }
             }
-            false
+            null
         }
     }
 
@@ -61,4 +95,9 @@ class FaceViewModel(application: Application) : AndroidViewModel(application) {
         }
         return sqrt(sum)
     }
+
+    private data class FaceMatch(
+        val userId: String,
+        val confidence: Float
+    )
 }

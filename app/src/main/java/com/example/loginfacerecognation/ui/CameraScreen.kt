@@ -1,5 +1,6 @@
 package com.example.loginfacerecognation.ui
 
+import android.provider.Settings
 import android.util.Log
 import android.view.ViewGroup
 import androidx.annotation.OptIn
@@ -46,10 +47,14 @@ fun CameraScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
+    val deviceId = remember {
+        Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID) ?: "unknown-device"
+    }
     
     var statusMessage by remember { mutableStateOf("No face detected") }
     var isFaceReady by remember { mutableStateOf(false) }
     var statusColor by remember { mutableStateOf(Color.Gray) }
+    var userId by remember { mutableStateOf("") }
     
     val mockEmbedding = remember { FloatArray(128) { 0.5f } }
     
@@ -92,7 +97,28 @@ fun CameraScreen(
                 fontSize = 14.sp
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+
+            OutlinedTextField(
+                value = userId,
+                onValueChange = { userId = it },
+                label = { Text("AJ username, email, or client ID") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedBorderColor = Color(0xFF4A89FF),
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color(0xFF4A89FF),
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color(0xFF4A89FF)
+                )
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             Box(
                 modifier = Modifier
@@ -218,7 +244,7 @@ fun CameraScreen(
                 onClick = {
                     scope.launch {
                         if (isRegistering) {
-                            val success = viewModel.registerFace("User", mockEmbedding)
+                            val success = viewModel.registerFace(userId.trim(), mockEmbedding)
                             if (success) {
                                 statusMessage = "Registration Successful!"
                                 statusColor = Color.Green
@@ -230,20 +256,20 @@ fun CameraScreen(
                                 statusColor = Color.Red
                             }
                         } else {
-                            val isRecognized = viewModel.verifyFace(mockEmbedding)
-                            if (isRecognized) {
-                                statusMessage = "Login Successful!"
+                            val response = viewModel.loginWithBackend(userId.trim(), mockEmbedding, deviceId)
+                            if (response?.success == true) {
+                                statusMessage = "Welcome ${response.userName ?: "Client"}!"
                                 statusColor = Color.Green
                                 kotlinx.coroutines.delay(1000)
-                                onSuccess("Login Successful")
+                                onSuccess(response.token ?: "Login Successful")
                             } else {
-                                statusMessage = "Not Registered"
+                                statusMessage = response?.message ?: "Backend login failed"
                                 statusColor = Color.Red
                             }
                         }
                     }
                 },
-                enabled = isFaceReady,
+                enabled = isFaceReady && userId.isNotBlank(),
                 modifier = Modifier
                     .padding(bottom = 48.dp)
                     .size(56.dp),

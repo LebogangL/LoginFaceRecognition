@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoginFaceRecognition - UML Diagrams</title>
+<style>
+  :root {
+    --navy:#0f2240; --blue:#1a4a8a; --accent:#2d7dd2; --teal:#0e7c6b;
+    --green:#1d7a3e; --purple:#5a2d82; --coral:#c84b31; --amber:#b06a0a;
+    --bg:#f7f8fa; --panel:#fff; --border:#e2e5eb; --text:#1a1c20;
+    --muted:#4a4c54; --soft:#8a8c95; --shadow:0 1px 4px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.04);
+    --r:10px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:"Segoe UI", Arial, sans-serif; line-height:1.6; }
+  .cover { background:linear-gradient(135deg,#0f2240 0%,#16345f 48%,#1a4a8a 100%); color:white; padding:76px 32px 58px; text-align:center; }
+  .cover h1 { font-size:clamp(30px,5vw,48px); line-height:1.16; font-weight:650; margin-bottom:12px; }
+  .cover h1 span { color:#77bbff; }
+  .cover p { color:rgba(255,255,255,.74); font-size:17px; margin-bottom:30px; }
+  .badges { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .badge { border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.12); border-radius:999px; padding:6px 14px; font-size:13px; }
+  .toc { background:white; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:2; }
+  .toc-inner { max-width:980px; margin:auto; display:flex; overflow-x:auto; }
+  .toc a { padding:15px 20px; color:var(--muted); text-decoration:none; white-space:nowrap; font-size:14px; border-bottom:3px solid transparent; }
+  .toc a:hover { color:var(--accent); border-color:var(--accent); }
+  .page { max-width:980px; margin:auto; padding:0 22px 70px; }
+  section { margin-top:52px; }
+  .section-head { display:flex; gap:14px; align-items:center; border-bottom:2px solid var(--border); padding-bottom:15px; margin-bottom:8px; }
+  .icon { width:42px; height:42px; border-radius:10px; display:grid; place-items:center; color:white; font-weight:700; }
+  .label { font-size:12px; color:var(--soft); letter-spacing:.1em; text-transform:uppercase; font-weight:700; }
+  h2 { font-size:24px; font-weight:650; }
+  .desc { color:var(--muted); font-size:15px; margin-bottom:22px; }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden; margin-bottom:20px; }
+  .card-title { padding:12px 18px; border-bottom:1px solid var(--border); font-size:13px; font-weight:700; color:var(--muted); display:flex; gap:8px; align-items:center; }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .card-body { padding:24px; overflow-x:auto; }
+  .legend { display:flex; flex-wrap:wrap; gap:12px 18px; padding:12px 15px; background:#f0f2f6; border-radius:8px; color:var(--muted); font-size:13px; margin-bottom:18px; }
+  .legend i { width:13px; height:13px; border-radius:3px; display:inline-block; vertical-align:-2px; margin-right:5px; }
+  svg { width:100%; height:auto; min-width:820px; display:block; }
+  .box { fill:#fff; stroke:#cfd5df; stroke-width:1.4; rx:8; }
+  .ui { fill:#e8f0fb; stroke:#2d7dd2; }
+  .vm { fill:#ede8fb; stroke:#5a2d82; }
+  .data { fill:#e8f5ee; stroke:#1d7a3e; }
+  .ext { fill:#fff5e8; stroke:#b06a0a; }
+  .warn { fill:#fdecea; stroke:#c84b31; }
+  .line { stroke:#64748b; stroke-width:1.5; fill:none; marker-end:url(#arrow); }
+  .dash { stroke-dasharray:6 4; }
+  text { font-family:"Segoe UI", Arial, sans-serif; fill:#1a1c20; }
+  .small { font-size:11px; fill:#555b66; }
+  .tiny { font-size:10px; fill:#6f7580; }
+  .name { font-size:13px; font-weight:700; }
+  .title { font-size:15px; font-weight:700; }
+  .white { fill:white; font-weight:700; }
+  .note { padding:14px 18px; background:#f8fafc; border-top:1px solid var(--border); color:var(--muted); font-size:14px; }
+  .trace { width:100%; border-collapse:collapse; font-size:14px; }
+  .trace th, .trace td { border-bottom:1px solid var(--border); text-align:left; padding:10px 12px; vertical-align:top; }
+  .trace th { color:var(--muted); background:#f8fafc; }
+  code { background:#eef2ff; color:#3730a3; padding:2px 5px; border-radius:5px; }
+  footer { text-align:center; padding:28px; color:var(--soft); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="cover">
+  <h1>LoginFaceRecognition <span>Android App</span><br>UML Design Documentation</h1>
+  <p>Architecture and workflow diagrams prepared from the actual Kotlin, Jetpack Compose, CameraX, ML Kit, and Room implementation.</p>
+  <div class="badges">
+    <span class="badge">Class Diagram</span>
+    <span class="badge">Use Case Diagram</span>
+    <span class="badge">Sequence Diagrams</span>
+    <span class="badge">Activity Diagram</span>
+    <span class="badge">Component Diagram</span>
+  </div>
+</div>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#class">01 Class</a>
+    <a href="#usecase">02 Use Case</a>
+    <a href="#sequence">03 Sequence</a>
+    <a href="#activity">04 Activity</a>
+    <a href="#component">05 Component</a>
+    <a href="#trace">06 Traceability</a>
+  </div>
+</nav>
+
+<div class="page">
+<section id="class">
+  <div class="section-head">
+    <div class="icon" style="background:var(--accent)">01</div>
+    <div><div class="label">Class Diagram</div><h2>Static Structure and Relationships</h2></div>
+  </div>
+  <p class="desc">This diagram shows the main classes and composables found in the cloned repository.</p>
+  <div class="legend">
+    <span><i class="ui"></i>UI and navigation</span>
+    <span><i class="vm"></i>ViewModel</span>
+    <span><i class="data"></i>Room data layer</span>
+    <span><i class="ext"></i>External Android/ML services</span>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Package view: com.example.loginfacerecognation</div>
+    <div class="card-body">
+      <svg viewBox="0 0 900 650" aria-label="Class diagram">
+        <defs><marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#64748b"/></marker></defs>
+        <rect x="28" y="40" width="190" height="96" class="box ui"/><text x="48" y="66" class="name">MainActivity</text><text x="48" y="90" class="small">+ onCreate(Bundle?)</text><text x="48" y="112" class="tiny">Requests CAMERA permission</text>
+        <rect x="330" y="40" width="210" height="122" class="box ui"/><text x="350" y="66" class="name">NavGraph</text><text x="350" y="90" class="small">+ NavGraph(navController)</text><text x="350" y="112" class="tiny">welcome, registration, login, home</text><text x="350" y="134" class="tiny">uses sealed class Screen</text>
+        <rect x="652" y="40" width="190" height="122" class="box ui"/><text x="672" y="66" class="name">WelcomeScreen</text><text x="672" y="90" class="small">+ Login button</text><text x="672" y="112" class="small">+ Register button</text><text x="672" y="134" class="tiny">Opens navigation routes</text>
+        <rect x="55" y="248" width="245" height="154" class="box ui"/><text x="75" y="274" class="name">CameraScreen</text><text x="75" y="298" class="small">+ isRegistering: Boolean</text><text x="75" y="320" class="small">+ onSuccess(String)</text><text x="75" y="342" class="tiny">Camera preview, frame analysis</text><text x="75" y="364" class="tiny">Face readiness feedback</text><text x="75" y="386" class="tiny">Uses mock FloatArray(128)</text>
+        <rect x="386" y="248" width="235" height="170" class="box vm"/><text x="406" y="274" class="name">FaceViewModel</text><text x="406" y="298" class="small">+ registerFace(name, embedding)</text><text x="406" y="320" class="small">+ verifyFace(currentEmbedding)</text><text x="406" y="342" class="small">+ clearAllData()</text><text x="406" y="364" class="tiny">calculateDistance()</text><text x="406" y="386" class="tiny">threshold: distance &lt; 0.7</text>
+        <rect x="682" y="248" width="185" height="154" class="box ext"/><text x="702" y="274" class="name">CameraX / ML Kit</text><text x="702" y="298" class="small">ProcessCameraProvider</text><text x="702" y="320" class="small">ImageAnalysis</text><text x="702" y="342" class="small">FaceDetection</text><text x="702" y="364" class="tiny">Detects face, eyes, distance</text>
+        <rect x="96" y="504" width="190" height="106" class="box data"/><text x="116" y="530" class="name">AppDatabase</text><text x="116" y="554" class="small">+ faceDao()</text><text x="116" y="576" class="tiny">Room database</text><text x="116" y="596" class="tiny">face_database</text>
+        <rect x="372" y="504" width="205" height="106" class="box data"/><text x="392" y="530" class="name">FaceDao</text><text x="392" y="554" class="small">+ getAllFaces()</text><text x="392" y="576" class="small">+ insertFace()</text><text x="392" y="596" class="small">+ deleteAllFaces()</text>
+        <rect x="670" y="504" width="190" height="106" class="box data"/><text x="690" y="530" class="name">FaceEntity</text><text x="690" y="554" class="small">id: Long</text><text x="690" y="576" class="small">name: String</text><text x="690" y="596" class="small">embedding: String</text>
+        <path d="M218 88 H330" class="line"/><path d="M540 92 H652" class="line"/><path d="M435 162 C420 210 300 216 240 248" class="line"/><path d="M300 326 H386" class="line"/><path d="M621 326 H682" class="line"/><path d="M480 418 C420 462 272 468 205 504" class="line"/><path d="M286 558 H372" class="line"/><path d="M577 558 H670" class="line"/>
+      </svg>
+    </div>
+    <div class="note">The current app detects face readiness with ML Kit, then saves or compares a placeholder embedding. The declared LiteRT dependencies can later provide the real embedding model.</div>
+  </div>
+</section>
+
+<section id="usecase">
+  <div class="section-head">
+    <div class="icon" style="background:var(--green)">02</div>
+    <div><div class="label">Use Case Diagram</div><h2>Actor Interactions and System Boundary</h2></div>
+  </div>
+  <p class="desc">The app has one primary actor: the mobile user who registers and logs in using face authentication.</p>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--green)"></span>Mobile user use cases</div>
+    <div class="card-body">
+      <svg viewBox="0 0 900 520" aria-label="Use case diagram">
+        <defs><marker id="arrow2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#64748b"/></marker></defs>
+        <circle cx="105" cy="130" r="28" fill="#fff" stroke="#0f2240" stroke-width="2"/><line x1="105" y1="158" x2="105" y2="245" stroke="#0f2240" stroke-width="2"/><line x1="60" y1="190" x2="150" y2="190" stroke="#0f2240" stroke-width="2"/><line x1="105" y1="245" x2="65" y2="318" stroke="#0f2240" stroke-width="2"/><line x1="105" y1="245" x2="145" y2="318" stroke="#0f2240" stroke-width="2"/><text x="75" y="354" class="name">Mobile User</text>
+        <rect x="260" y="36" width="560" height="420" fill="none" stroke="#1a4a8a" stroke-width="1.6" stroke-dasharray="7 5" rx="12"/><text x="474" y="66" class="title">LoginFaceRecognition App</text>
+        <ellipse cx="430" cy="126" rx="112" ry="34" class="box ui"/><text x="375" y="130" class="small">Grant camera permission</text>
+        <ellipse cx="635" cy="126" rx="112" ry="34" class="box ui"/><text x="585" y="130" class="small">Open welcome screen</text>
+        <ellipse cx="430" cy="224" rx="112" ry="34" class="box ui"/><text x="382" y="228" class="small">Register face</text>
+        <ellipse cx="635" cy="224" rx="112" ry="34" class="box ui"/><text x="595" y="228" class="small">Login with face</text>
+        <ellipse cx="430" cy="322" rx="112" ry="34" class="box ext"/><text x="372" y="326" class="small">Pass face quality checks</text>
+        <ellipse cx="635" cy="322" rx="112" ry="34" class="box data"/><text x="582" y="326" class="small">Store or compare face</text>
+        <ellipse cx="532" cy="404" rx="112" ry="34" class="box data"/><text x="474" y="408" class="small">Access home screen</text>
+        <path d="M150 188 C210 168 260 144 318 130" class="line"/><path d="M150 188 C250 205 286 218 318 224" class="line"/><path d="M150 188 C250 244 295 226 523 224" class="line"/><path d="M430 258 V288" class="line"/><path d="M635 258 V288" class="line"/><path d="M542 322 H523" class="line dash"/><path d="M635 356 C610 380 584 394 555 404" class="line"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="sequence">
+  <div class="section-head">
+    <div class="icon" style="background:var(--purple)">03</div>
+    <div><div class="label">Sequence Diagrams</div><h2>Time-Ordered Message Flows</h2></div>
+  </div>
+  <p class="desc">Two main flows are documented because registration writes to Room, while login reads and compares stored embeddings.</p>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--purple)"></span>Sequence A: face registration</div>
+    <div class="card-body">
+      <svg viewBox="0 0 900 520" aria-label="Registration sequence">
+        <defs><marker id="arrow3" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#64748b"/></marker></defs>
+        <g><rect x="30" y="26" width="115" height="34" class="box"/><text x="58" y="48" class="small">User</text><line x1="88" y1="60" x2="88" y2="485" stroke="#cbd5e1" stroke-dasharray="5 5"/></g>
+        <g><rect x="175" y="26" width="130" height="34" class="box ui"/><text x="194" y="48" class="small">WelcomeScreen</text><line x1="240" y1="60" x2="240" y2="485" stroke="#cbd5e1" stroke-dasharray="5 5"/></g>
+        <g><rect x="335" y="26" width="115" height="34" class="box ui"/><text x="362" y="48" class="small">NavGraph</text><line x1="392" y1="60" x2="392" y2="485" stroke="#cbd5e1" stroke-dasharray="5 5"/></g>
+        <g><rect x="475" y="26" width="130" height="34" class="box ui"/><text x="500" y="48" class="small">CameraScreen</text><line x1="540" y1="60" x2="540" y2="485" stroke="#cbd5e1" stroke-dasharray="5 5"/></g>
+        <g><rect x="640" y="26" width="105" height="34" class="box vm"/><text x="662" y="48" class="small">ViewModel</text><line x1="692" y1="60" x2="692" y2="485" stroke="#cbd5e1" stroke-dasharray="5 5"/></g>
+        <g><rect x="778" y="26" width="94" height="34" class="box data"/><text x="800" y="48" class="small">Room DB</text><line x1="825" y1="60" x2="825" y2="485" stroke="#cbd5e1" stroke-dasharray="5 5"/></g>
+        <path d="M88 100 H240" class="line"/><text x="112" y="94" class="tiny">tap Register</text>
+        <path d="M240 145 H392" class="line"/><text x="258" y="139" class="tiny">navigate(registration)</text>
+        <path d="M392 190 H540" class="line"/><text x="411" y="184" class="tiny">open CameraScreen(true)</text>
+        <path d="M540 235 C600 250 600 280 540 295" class="line"/><text x="582" y="262" class="tiny">detect face quality</text>
+        <path d="M88 340 H540" class="line"/><text x="225" y="334" class="tiny">tap confirm when ready</text>
+        <path d="M540 385 H692" class="line"/><text x="560" y="379" class="tiny">registerFace("User", embedding)</text>
+        <path d="M692 430 H825" class="line"/><text x="716" y="424" class="tiny">insert FaceEntity</text>
+        <path d="M825 468 H392" class="line dash"/><text x="558" y="462" class="tiny">success, route to Login</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--purple)"></span>Sequence B: face login</div>
+    <div class="card-body">
+      <svg viewBox="0 0 900 440" aria-label="Login sequence">
+        <defs><marker id="arrow4" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#64748b"/></marker></defs>
+        <rect x="36" y="24" width="112" height="34" class="box"/><text x="64" y="46" class="small">User</text><line x1="92" y1="58" x2="92" y2="400" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+        <rect x="200" y="24" width="118" height="34" class="box ui"/><text x="220" y="46" class="small">CameraScreen</text><line x1="259" y1="58" x2="259" y2="400" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+        <rect x="370" y="24" width="120" height="34" class="box ext"/><text x="398" y="46" class="small">ML Kit</text><line x1="430" y1="58" x2="430" y2="400" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+        <rect x="550" y="24" width="122" height="34" class="box vm"/><text x="580" y="46" class="small">ViewModel</text><line x1="611" y1="58" x2="611" y2="400" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+        <rect x="730" y="24" width="120" height="34" class="box data"/><text x="765" y="46" class="small">FaceDao</text><line x1="790" y1="58" x2="790" y2="400" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+        <path d="M92 100 H259" class="line"/><text x="125" y="94" class="tiny">tap Login/Confirm</text>
+        <path d="M259 145 H430" class="line"/><text x="286" y="139" class="tiny">process camera frame</text>
+        <path d="M430 188 H259" class="line dash"/><text x="302" y="182" class="tiny">face ready</text>
+        <path d="M259 232 H611" class="line"/><text x="365" y="226" class="tiny">verifyFace(currentEmbedding)</text>
+        <path d="M611 276 H790" class="line"/><text x="650" y="270" class="tiny">getAllFaces()</text>
+        <path d="M790 320 H611" class="line dash"/><text x="655" y="314" class="tiny">stored embeddings</text>
+        <path d="M611 356 C690 372 690 395 611 407" class="line"/><text x="680" y="386" class="tiny">distance &lt; 0.7?</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="activity">
+  <div class="section-head">
+    <div class="icon" style="background:var(--teal)">04</div>
+    <div><div class="label">Activity Diagram</div><h2>Face Authentication Workflow</h2></div>
+  </div>
+  <p class="desc">This workflow follows the current app behavior from camera permission through registration or login result.</p>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--teal)"></span>Activity: camera readiness and authentication</div>
+    <div class="card-body">
+      <svg viewBox="0 0 900 760" aria-label="Activity diagram">
+        <defs><marker id="arrow5" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#64748b"/></marker></defs>
+        <rect x="390" y="25" width="120" height="36" fill="#0f2240" rx="18"/><text x="421" y="48" class="white">Start app</text>
+        <polygon points="450,95 535,145 450,195 365,145" fill="#fffbe6" stroke="#d7b739"/><text x="403" y="149" class="small">Camera allowed?</text>
+        <rect x="630" y="125" width="155" height="42" class="box warn"/><text x="657" y="151" class="small">Request permission</text>
+        <rect x="355" y="230" width="190" height="48" class="box ui"/><text x="389" y="259" class="small">Show WelcomeScreen</text>
+        <polygon points="450,312 535,362 450,412 365,362" fill="#fffbe6" stroke="#d7b739"/><text x="405" y="366" class="small">Action selected?</text>
+        <rect x="172" y="448" width="170" height="48" class="box ui"/><text x="210" y="477" class="small">Register face</text>
+        <rect x="558" y="448" width="170" height="48" class="box ui"/><text x="607" y="477" class="small">Login face</text>
+        <rect x="355" y="536" width="190" height="48" class="box ext"/><text x="386" y="565" class="small">Analyze camera frame</text>
+        <polygon points="450,620 540,670 450,720 360,670" fill="#fffbe6" stroke="#d7b739"/><text x="398" y="665" class="small">Face ready?</text><text x="418" y="682" class="tiny">close and eyes open</text>
+        <rect x="98" y="648" width="170" height="48" class="box warn"/><text x="122" y="677" class="small">Show guidance</text>
+        <rect x="625" y="648" width="185" height="48" class="box data"/><text x="651" y="677" class="small">Save or compare face</text>
+        <path d="M450 61 V95" class="line"/><path d="M535 145 H630" class="line"/><path d="M708 125 V86 H450 V95" class="line dash"/><path d="M450 195 V230" class="line"/><path d="M450 278 V312" class="line"/><path d="M365 362 C300 390 270 420 257 448" class="line"/><text x="284" y="408" class="tiny">register</text><path d="M535 362 C600 390 630 420 643 448" class="line"/><text x="599" y="408" class="tiny">login</text><path d="M257 496 C290 526 332 536 355 554" class="line"/><path d="M643 496 C610 526 568 536 545 554" class="line"/><path d="M450 584 V620" class="line"/><path d="M360 670 H268" class="line"/><path d="M183 648 C183 590 310 575 355 560" class="line dash"/><path d="M540 670 H625" class="line"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="component">
+  <div class="section-head">
+    <div class="icon" style="background:var(--amber)">05</div>
+    <div><div class="label">Component Diagram</div><h2>Modular Architecture and Dependencies</h2></div>
+  </div>
+  <p class="desc">The repository is organized around Compose UI screens, a ViewModel layer, Room persistence, and device camera/ML services.</p>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--amber)"></span>Component architecture</div>
+    <div class="card-body">
+      <svg viewBox="0 0 900 560" aria-label="Component diagram">
+        <defs><marker id="arrow6" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#64748b"/></marker></defs>
+        <rect x="34" y="52" width="220" height="170" class="box ui"/><text x="58" y="82" class="title">Presentation Layer</text><text x="58" y="112" class="small">MainActivity</text><text x="58" y="136" class="small">WelcomeScreen</text><text x="58" y="160" class="small">CameraScreen</text><text x="58" y="184" class="small">NavGraph / Screen routes</text>
+        <rect x="342" y="78" width="210" height="118" class="box vm"/><text x="367" y="108" class="title">State and Logic</text><text x="367" y="138" class="small">FaceViewModel</text><text x="367" y="162" class="small">Register / verify / clear</text>
+        <rect x="646" y="52" width="220" height="170" class="box data"/><text x="670" y="82" class="title">Local Data Layer</text><text x="670" y="112" class="small">AppDatabase</text><text x="670" y="136" class="small">FaceDao</text><text x="670" y="160" class="small">FaceEntity</text><text x="670" y="184" class="small">faces table</text>
+        <rect x="96" y="330" width="220" height="132" class="box ext"/><text x="120" y="360" class="title">Device Services</text><text x="120" y="390" class="small">Camera permission</text><text x="120" y="414" class="small">CameraX front camera</text><text x="120" y="438" class="small">PreviewView / ImageAnalysis</text>
+        <rect x="414" y="330" width="220" height="132" class="box ext"/><text x="438" y="360" class="title">Face Processing</text><text x="438" y="390" class="small">ML Kit Face Detection</text><text x="438" y="414" class="small">Face readiness checks</text><text x="438" y="438" class="small">LiteRT future embedding</text>
+        <path d="M254 138 H342" class="line"/><path d="M552 138 H646" class="line"/><path d="M170 222 V330" class="line"/><path d="M254 170 C352 230 420 270 480 330" class="line"/><path d="M524 330 C560 270 590 224 646 170" class="line dash"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="trace">
+  <div class="section-head">
+    <div class="icon" style="background:var(--coral)">06</div>
+    <div><div class="label">Traceability</div><h2>Diagram Source Mapping</h2></div>
+  </div>
+  <p class="desc">Each diagram item is tied back to files in the cloned repository so the document can be defended during review.</p>
+  <div class="card">
+    <div class="card-body">
+      <table class="trace">
+        <thead><tr><th>Diagram item</th><th>Repository source</th><th>Reason included</th></tr></thead>
+        <tbody>
+          <tr><td>MainActivity</td><td><code>app/src/main/java/.../MainActivity.kt</code></td><td>Entry point, permission handling, Compose host.</td></tr>
+          <tr><td>WelcomeScreen</td><td><code>ui/WelcomeScreen.kt</code></td><td>Initial user choice between registration and login.</td></tr>
+          <tr><td>CameraScreen</td><td><code>ui/CameraScreen.kt</code></td><td>Camera preview, ML Kit face readiness checks, confirm action.</td></tr>
+          <tr><td>FaceViewModel</td><td><code>ui/FaceViewModel.kt</code></td><td>Controls face registration, verification, and distance matching.</td></tr>
+          <tr><td>Room data layer</td><td><code>data/AppDatabase.kt</code>, <code>FaceDao.kt</code>, <code>FaceEntity.kt</code></td><td>Stores names and serialized face embeddings in the local database.</td></tr>
+          <tr><td>External services</td><td><code>app/build.gradle.kts</code>, <code>AndroidManifest.xml</code></td><td>CameraX, ML Kit, LiteRT dependencies and camera permission.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>LoginFaceRecognition UML design document</footer>
+</body>
+</html>
