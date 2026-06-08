@@ -58,7 +58,7 @@ class ApiService(
     }
 
     companion object {
-        // Android emulator to local WildFly. For a real phone, use your ngrok URL ending with /AJInvestment/.
-        const val BASE_URL = "http://10.0.2.2:8080/AJInvestment/"
+        // Azure-hosted AJInvestment backend.
+        const val BASE_URL = "http://20.164.210.147:8080/AJInvestment/"
     }
 }
