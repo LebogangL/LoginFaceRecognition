@@ -243,6 +243,18 @@ fun CameraScreen(
             FilledIconButton(
                 onClick = {
                     scope.launch {
+                        if (userId.isBlank()) {
+                            statusMessage = "Enter AJ username, email, or client ID"
+                            statusColor = Color.Red
+                            return@launch
+                        }
+
+                        if (!isFaceReady) {
+                            statusMessage = "No face detected. Look into the camera first"
+                            statusColor = Color.Red
+                            return@launch
+                        }
+
                         if (isRegistering) {
                             val success = viewModel.registerFace(userId.trim(), mockEmbedding)
                             if (success) {
@@ -269,20 +281,18 @@ fun CameraScreen(
                         }
                     }
                 },
-                enabled = isFaceReady && userId.isNotBlank(),
                 modifier = Modifier
                     .padding(bottom = 48.dp)
                     .size(56.dp),
                 shape = CircleShape,
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = Color(0xFF4A89FF),
-                    disabledContainerColor = Color.DarkGray
+                    containerColor = if (isFaceReady && userId.isNotBlank()) Color(0xFF4A89FF) else Color.DarkGray
                 )
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "Confirm",
-                    tint = if (isFaceReady) Color.White else Color.Gray
+                    tint = Color.White
                 )
             }
         }
