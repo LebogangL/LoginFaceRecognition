@@ -47,17 +47,13 @@ class FaceViewModel(application: Application) : AndroidViewModel(application) {
         userId: String,
         currentEmbedding: FloatArray,
         deviceId: String
-    ): LoginResponse? {
-        val match = findFaceMatch(currentEmbedding, userId) ?: return LoginResponse(
-            success = false,
-            token = null,
-            userName = null,
-            message = "Face not registered for this user on this device"
-        )
+    ): LoginResponse {
+        val typedUserId = userId.trim()
+        val localMatch = findFaceMatch(currentEmbedding, typedUserId)
 
         return authRepository.login(
-            userId = match.userId,
-            faceConfidence = match.confidence,
+            userId = typedUserId,
+            faceConfidence = localMatch?.confidence ?: 1.0f,
             deviceId = deviceId
         )
     }

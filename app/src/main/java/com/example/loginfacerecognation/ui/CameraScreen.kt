@@ -269,13 +269,13 @@ fun CameraScreen(
                             }
                         } else {
                             val response = viewModel.loginWithBackend(userId.trim(), mockEmbedding, deviceId)
-                            if (response?.success == true) {
+                            if (response.success) {
                                 statusMessage = "Welcome ${response.userName ?: "Client"}!"
                                 statusColor = Color.Green
                                 kotlinx.coroutines.delay(1000)
                                 onSuccess(response.token ?: "Login Successful")
                             } else {
-                                statusMessage = response?.message ?: "Backend login failed"
+                                statusMessage = response.message ?: "Backend login failed"
                                 statusColor = Color.Red
                             }
                         }

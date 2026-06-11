@@ -8,7 +8,7 @@ import com.example.loginfacerecognation.network.ApiService
 class FaceAuthRepository(
     private val apiService: ApiService = ApiService()
 ) {
-    suspend fun login(userId: String, faceConfidence: Float, deviceId: String): LoginResponse? {
+    suspend fun login(userId: String, faceConfidence: Float, deviceId: String): LoginResponse {
         return try {
             apiService.submitLogin(
                 LoginRequest(
@@ -19,7 +19,12 @@ class FaceAuthRepository(
             )
         } catch (e: Exception) {
             Log.e("FaceAuthRepository", "Backend face login failed", e)
-            null
+            LoginResponse(
+                success = false,
+                token = null,
+                userName = null,
+                message = "Could not reach AJ backend. Check the server and internet connection."
+            )
         }
     }
 }
